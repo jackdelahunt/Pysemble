@@ -1,13 +1,15 @@
 from pycc import Project, Library
+from enviroment import Gpp, Ar
 
-lib = Library("lib")
+compiler = Gpp()
+archiver = Ar()
+
+lib = Library("lib", compiler, archiver)
 lib.add_source("/home/jackdelahunt/Projects/pymake/lib/preson.cpp")
 lib.build()
 
-game = Project("game")
-game.add_executables([
-    "main.cpp",
-])
-game.add_static("lib.a")
+game = Project("game", compiler)
+game.add_executable("main.cpp")
+game.add_static("__pycc_cache__/lib.a")
 game.build()
 game.run()

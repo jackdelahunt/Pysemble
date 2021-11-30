@@ -1,5 +1,5 @@
 #include "person.h"
 
 Person::Person() {
-    age = 10;
+    age  = 10;
 }
