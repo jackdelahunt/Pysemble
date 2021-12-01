@@ -41,8 +41,8 @@ class Project:
 
     def build(self):
         if len(self.static_libraries) > 0:
-            object_file = self.compiler.build_to_object(build_dir + self.name + ".o", self.executables)
-            self.compiler.build(self.name, [object_file] + self.static_libraries)
+            object_files = self.compiler.build_to_objects(build_dir, self.executables)
+            self.compiler.build(self.name, object_files + self.static_libraries)
         else:
             self.compiler.build(self.name, self.executables)
 
@@ -62,6 +62,5 @@ class Library:
 
     def build(self):
         create_cache()
-        object = self.compiler.build_to_object(build_dir + self.name + ".o", self.libraries)
-        self.objects.append(object)
-        self.archiver.archive(build_dir + self.name, self.objects)
+        self.objects = self.compiler.build_to_objects(build_dir, self.libraries)
+        # self.archiver.archive(build_dir + self.name, self.objects)

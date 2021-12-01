@@ -4,12 +4,15 @@ from enviroment import Gpp, Ar
 compiler = Gpp()
 archiver = Ar()
 
-lib = Library("lib", compiler, archiver)
-lib.add_source("/home/jackdelahunt/Projects/pymake/lib/preson.cpp")
-lib.build()
+library = Library("mylib", compiler, archiver)
+library.add_source("mylib/multi_vector.cpp")
+library.add_source("mylib/vector.cpp")
+library.build()
 
-game = Project("game", compiler)
-game.add_executable("main.cpp")
-game.add_static("__pycc_cache__/lib.a")
-game.build()
-game.run()
+project = Project("myproject", compiler)
+project.add_executables([
+    "main.cpp"
+])
+project.add_static("__pycc_cache__/mylib.a")
+project.build()
+project.run()
