@@ -28,6 +28,8 @@ class Project:
         self.compiler = compiler
         self.executables = []
         self.static_libraries = []
+        self.dynamic_libraries = []
+        self.link_path = ""
 
     # executables
     def add_executable(self, path):
@@ -36,15 +38,23 @@ class Project:
     def add_executables(self, paths):
         self.executables = self.executables + paths
 
-    def add_static(self, path):
+    def add_static_lib(self, path):
         self.static_libraries.append(path)
 
+    def add_dynamic_lib(self, name):
+        self.dynamic_libraries.append(name)
+
+    def set_link_path(self, path):
+        self.link_path = path
+
     def build(self):
-        if len(self.static_libraries) > 0:
-            object_files = self.compiler.build_to_objects(build_dir, self.executables)
+        object_files = self.compiler.build_to_objects(build_dir, self.executables)
+        if len(self.dynamic_libraries) > 0:
+            self.compiler.build(self.name, object_files, link_path=self.link_path, shared_objects=self.dynamic_libraries)
+        elif len(self.static_libraries) > 0:
             self.compiler.build(self.name, object_files + self.static_libraries)
         else:
-            self.compiler.build(self.name, self.executables)
+            self.compiler.build(self.name, object_files)
 
     def run(self):
         os.system("./" + self.name)
@@ -70,6 +80,6 @@ class Library:
 
     def build_shared(self):
         create_cache()
-        self.objects = self.compiler.build_to_shared_objects(build_dir, self.libraries)
-        self.compiler.build_from_objects(build_dir + self.name + ".so", self.objects, shared=True)
+        self.objects = self.compiler.build_sharable_objects(build_dir, self.libraries)
+        self.compiler.build_shared_object(build_dir + self.name + ".so", self.objects)
 

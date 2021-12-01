@@ -11,23 +11,34 @@ def concat_list(str_list) -> str:
 
 class Compiler:
 
-    def build(self, out, files):
+    def build(self, out, files, link_path="", shared_objects=[]):
         pass
 
     def build_to_objects(self, location, files) -> list[str]:
         pass
 
-    def build_to_shared_objects(self, location, files) -> list[str]:
+    def build_sharable_objects(self, location, files) -> list[str]:
         pass
 
-    def build_from_objects(self, out, files, shared=False) -> str:
+    def build_shared_object(self, out, files) -> str:
         pass
 
 
 class Gpp(Compiler):
 
-    def build(self, out, files):
-        os.system("g++ " + concat_list(files) + " -o " + out)
+    def build(self, out, files, link_path="", shared_objects=[]):
+        final_command = "g++ "
+
+        if link_path != "":
+            final_command += "-L" + link_path + " "
+
+        if len(shared_objects) > 0:
+            for so in shared_objects:
+                final_command += "-l" + so + " "
+
+        final_command += concat_list(files) + " -o " + out
+
+        os.system(final_command)
 
     def build_to_objects(self, location, files) -> list[str]:
         object_files = []
@@ -41,7 +52,7 @@ class Gpp(Compiler):
             object_files.append(object_file)
         return object_files
 
-    def build_to_shared_objects(self, location, files) -> list[str]:
+    def build_sharable_objects(self, location, files) -> list[str]:
         object_files = []
         for file in files:
             # file is the file location
@@ -53,12 +64,8 @@ class Gpp(Compiler):
             object_files.append(object_file)
         return object_files
 
-    def build_from_objects(self, out, files, shared=False) -> str:
-        if shared:
-            os.system("g++ -shared " + concat_list(files) + " -o " + out)
-        else:
-            os.system("g++ -o " + out + " " + concat_list(files))
-
+    def build_shared_object(self, out, files) -> str:
+        os.system("g++ -shared " + concat_list(files) + " -o " + out)
         return out
 
 
