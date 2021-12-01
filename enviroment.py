@@ -26,7 +26,7 @@ class Compiler:
 
 class Gpp(Compiler):
 
-    def build(self, out, files, includes=[], link_path="", shared_objects=[]):
+    def build(self, out, files, includes=[], link_path="", shared_objects=[], static_libraries=[]):
         final_command = "g++ -o " + out + " " + concat_list(files) + " "
 
         if len(includes) > 0:
@@ -39,6 +39,10 @@ class Gpp(Compiler):
         if len(shared_objects) > 0:
             for so in shared_objects:
                 final_command += "-l" + so + " "
+
+        if len(static_libraries) > 0:
+            for ar in static_libraries:
+                final_command += ar + " "
 
         os.system(final_command)
 
