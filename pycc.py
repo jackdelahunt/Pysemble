@@ -29,6 +29,7 @@ class Project:
         self.executables = []
         self.static_libraries = []
         self.dynamic_libraries = []
+        self.include_directories = []
         self.link_path = ""
 
     # executables
@@ -41,16 +42,26 @@ class Project:
     def add_static_lib(self, path):
         self.static_libraries.append(path)
 
+    def add_static_libs(self, paths):
+        self.static_libraries += paths
+
     def add_dynamic_lib(self, name):
         self.dynamic_libraries.append(name)
+
+    def add_dynamic_libs(self, names):
+        self.dynamic_libraries += names
 
     def set_link_path(self, path):
         self.link_path = path
 
+    def add_include_directory(self, path):
+        self.include_directories.append(path)
+
     def build(self):
-        object_files = self.compiler.build_to_objects(build_dir, self.executables)
+        object_files = self.compiler.build_to_objects(build_dir, self.executables, includes=self.include_directories)
         if len(self.dynamic_libraries) > 0:
-            self.compiler.build(self.name, object_files, link_path=self.link_path, shared_objects=self.dynamic_libraries)
+            self.compiler.build(self.name, object_files, includes=self.include_directories,
+                                link_path=self.link_path, shared_objects=self.dynamic_libraries)
         elif len(self.static_libraries) > 0:
             self.compiler.build(self.name, object_files + self.static_libraries)
         else:
