@@ -60,7 +60,16 @@ class Library:
     def add_source(self, path):
         self.libraries.append(path)
 
+    def add_sources(self, paths):
+        self.libraries += paths
+
     def build(self):
         create_cache()
         self.objects = self.compiler.build_to_objects(build_dir, self.libraries)
-        # self.archiver.archive(build_dir + self.name, self.objects)
+        self.archiver.archive(build_dir + self.name, self.objects)
+
+    def build_shared(self):
+        create_cache()
+        self.objects = self.compiler.build_to_shared_objects(build_dir, self.libraries)
+        self.compiler.build_from_objects(build_dir + self.name + ".so", self.objects, shared=True)
+
