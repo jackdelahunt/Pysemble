@@ -1,5 +1,7 @@
 import os.path
 import os
+import shutil
+from shutil import copyfile
 
 build_dir = os.getcwd() + "/__pycc_cache__/"
 
@@ -74,12 +76,19 @@ class Library:
         self.archiver = archiver
         self.libraries = []
         self.objects = []
+        self.headers = []
 
     def add_source(self, path):
         self.libraries.append(path)
 
     def add_sources(self, paths):
         self.libraries += paths
+
+    def add_header(self, path):
+        self.headers.append(path)
+
+    def add_headers(self, paths):
+        self.headers += paths
 
     def build(self):
         create_cache()
@@ -91,3 +100,26 @@ class Library:
         self.objects = self.compiler.build_sharable_objects(build_dir, self.libraries)
         self.compiler.build_shared_object(build_dir + self.name + ".so", self.objects)
 
+    def package(self, dynamic=False):
+        # setting up folder for package
+        if os.path.isdir(self.name):
+            shutil.rmtree(self.name)
+
+        os.mkdir(self.name)
+        lib_path = self.name + "/lib/"
+        include_path = self.name + "/include/"
+        os.mkdir(lib_path)
+        os.mkdir(include_path)
+
+        # copy header files over
+        for header in self.headers:
+            file_name = os.path.basename(header)
+            copyfile(header, include_path + file_name)
+
+        # build shared objects
+        self.objects = self.compiler.build_sharable_objects(build_dir, self.libraries)
+
+        if dynamic:
+            self.compiler.build_shared_object(lib_path + self.name + ".so", self.objects)
+        else:
+            self.archiver.archive(lib_path + self.name, self.objects)
