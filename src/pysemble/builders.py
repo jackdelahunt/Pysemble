@@ -3,7 +3,7 @@ import os.path
 import os
 import shutil
 
-build_dir = os.getcwd() + "/__pycc_cache__/"
+build_dir = os.getcwd() + "/__pysembled__/"
 
 def concat_list(str_list) -> str:
     str = ""
@@ -25,6 +25,7 @@ def create_cache():
 
 class Project:
     def __init__(self, name, compiler):
+        create_cache()
         self.name = name
         self.compiler = compiler
         self.executables = []
@@ -70,6 +71,7 @@ class Project:
 
 class Library:
     def __init__(self, name, compiler, archiver):
+        create_cache()
         self.name = name
         self.compiler = compiler
         self.archiver = archiver
@@ -90,12 +92,10 @@ class Library:
         self.headers += paths
 
     def build(self):
-        create_cache()
         self.objects = self.compiler.build_to_objects(build_dir, self.libraries)
         self.archiver.archive(build_dir + self.name, self.objects)
 
     def build_shared(self):
-        create_cache()
         self.objects = self.compiler.build_sharable_objects(build_dir, self.libraries)
         self.compiler.build_shared_object(build_dir + self.name + ".so", self.objects)
 
