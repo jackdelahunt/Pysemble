@@ -1,4 +1,21 @@
-# Pysemble
+Metadata-Version: 2.1
+Name: peach
+Version: 0.0.1
+Summary: C/C++ build system
+Home-page: https://github.com/jackdelahunt/Peach
+Author: Jack Delahunt
+Author-email: jdealhunt@gmail.com
+License: UNKNOWN
+Project-URL: Bug Tracker, https://github.com/jackdelahunt/Peach/issues
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: Unix
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+# Pycc
 
 Custom build system for C/C++ for use with python for configuration.
 
@@ -72,3 +89,4 @@ liblogger
     |_ lib
         |_ liblogger.so
 ```
+

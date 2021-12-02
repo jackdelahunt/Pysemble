@@ -1,0 +1,8 @@
+LICENSE
+README.md
+pyproject.toml
+setup.cfg
+src/peach_jackdelahunt.egg-info/PKG-INFO
+src/peach_jackdelahunt.egg-info/SOURCES.txt
+src/peach_jackdelahunt.egg-info/dependency_links.txt
+src/peach_jackdelahunt.egg-info/top_level.txt
