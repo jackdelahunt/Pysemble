@@ -2,6 +2,18 @@
 
 Custom build system for C/C++ for use with python for configuration.
 
+## Install
+```python
+pip install pysemble
+```
+
+## Modules
+```python
+from pysemble.builders import Project, Libary
+from pysemble.compilers import Gpp
+from pysemble.archivers import Ar
+```
+
 ## Hello world Build
 ```python
 compiler = Gpp() # g++
