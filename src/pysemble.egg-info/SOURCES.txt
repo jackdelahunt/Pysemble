@@ -1,8 +1,0 @@
-LICENSE
-README.md
-pyproject.toml
-setup.cfg
-src/pysemble.egg-info/PKG-INFO
-src/pysemble.egg-info/SOURCES.txt
-src/pysemble.egg-info/dependency_links.txt
-src/pysemble.egg-info/top_level.txt

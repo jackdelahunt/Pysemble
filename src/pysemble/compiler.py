@@ -1,13 +1,6 @@
+from pysemble.builders import concat_list
 import os.path
 import os
-
-
-def concat_list(str_list) -> str:
-    str = ""
-    for s in str_list:
-        str = str + " " + s
-    return str
-
 
 class Compiler:
 
@@ -81,17 +74,3 @@ class Gpp(Compiler):
     def build_shared_object(self, out, files) -> str:
         os.system("g++ -shared " + concat_list(files) + " -o " + out)
         return out
-
-
-class Archiver:
-
-    def archive(self, out, files) -> str:
-        pass
-
-
-class Ar(Archiver):
-
-    def archive(self, out, files) -> str:
-        final_out = out + ".a"
-        os.system("ar rcs " + final_out + concat_list(files))
-        return final_out

@@ -1,21 +1,20 @@
+from shutil import copyfile
 import os.path
 import os
 import shutil
-from shutil import copyfile
 
 build_dir = os.getcwd() + "/__pycc_cache__/"
+
+def concat_list(str_list) -> str:
+    str = ""
+    for s in str_list:
+        str = str + " " + s
+    return str
 
 def concat_list_prefix(str_list, prefix):
     str = ""
     for s in str_list:
         str = str + " " + prefix + s
-
-    return str
-
-def concat_list(str_list):
-    str = ""
-    for s in str_list:
-        str = str + " " + s
 
     return str
 
