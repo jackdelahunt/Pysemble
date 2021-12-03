@@ -10,7 +10,7 @@ logging.basicConfig(format='\033[1;37;40m %(levelname)s :: (%(asctime)s) :: %(me
 
 def create_cache():
     if not os.path.isdir(build_dir):
-        log("No build directory found, creating a new one at: " + bui, info=True)
+        log("No build directory found, creating a new one at: " + build_dir, info=True)
         os.mkdir(build_dir)
 
 class Project:
