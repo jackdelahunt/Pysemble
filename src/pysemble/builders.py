@@ -3,7 +3,7 @@ import os.path
 import os
 import shutil
 import logging
-from logger.log import log
+from pysemble.logger.log import log
 
 build_dir = os.getcwd() + "/__pysembled__/"
 logging.basicConfig(format='\033[1;37;40m %(levelname)s :: (%(asctime)s) :: %(message)s', datefmt='%H:%M:%S', level=logging.DEBUG)

@@ -9,3 +9,7 @@ install-test:
 
 deploy:
 	python3 -m twine upload dist/*
+
+deploy-local:
+	pip install .
+	pip install -e .

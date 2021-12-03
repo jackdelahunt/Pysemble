@@ -1,7 +1,7 @@
-from lists.helpers import concat_list
+from pysemble.lists.helpers import concat_list
+from pysemble.logger.log import log
 import os.path
 import os
-from logger.log import log
 
 class Archiver:
 
