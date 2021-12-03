@@ -1,5 +1,7 @@
 import logging
 
+logging.basicConfig(format='\033[1;37;40m %(levelname)s :: (%(asctime)s) :: %(message)s', datefmt='%H:%M:%S', level=logging.DEBUG)
+
 def log(message, info=False, debug=False, warn=False, err=False):
 
     if info:
