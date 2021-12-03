@@ -57,7 +57,7 @@ class Gpp(Compiler):
             base_file: str = os.path.basename(file)
             final_command = "g++ -c " + file
 
-            object_file = str(location) + base_file + ".o"
+            object_file = str(location / (base_file + ".o"))
 
             if len(includes) > 0:
                 for i in includes:

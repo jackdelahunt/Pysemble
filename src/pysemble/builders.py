@@ -8,8 +8,11 @@ import os.path
 import os
 import shutil
 
+def is_posix() -> bool:
+    return platform.system() == "Linux" or platform.system() == "Darwin"
+
 build_dir: Path
-if platform.system() == "Linux" or platform.system() == "Darwin":
+if is_posix():
     build_dir = Path(PurePosixPath(os.getcwd())) / "__pysembled__/"
 else:
     build_dir = Path(PureWindowsPath(os.getcwd())) / "__pysembled__/"
@@ -66,7 +69,13 @@ class Project:
                             )
 
     def run(self):
-        os.system("./" + self.name)
+        if is_posix():
+            final_command = "./" + self.name
+        else:
+            final_command = ".\\" + self.name
+
+        log(final_command, debug=True)
+        os.system(final_command)
 
 class Library:
     def __init__(self, name: str, compiler: Compiler, archiver: Archiver):
