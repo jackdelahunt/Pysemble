@@ -1,6 +1,7 @@
-from pysemble.builders import concat_list
+from lists.helpers import concat_list
 import os.path
 import os
+from logger.log import log
 
 class Compiler:
 
@@ -20,7 +21,8 @@ class Compiler:
 class Gpp(Compiler):
 
     def build(self, out, files, includes=[], link_path="", shared_objects=[], static_libraries=[]):
-        final_command = "g++ -o " + out + " " + concat_list(files) + " "
+        file_list = concat_list(files)
+        final_command = "g++ -o " + out + " " + file_list + " "
 
         if len(includes) > 0:
             for i in includes:
@@ -37,6 +39,13 @@ class Gpp(Compiler):
             for ar in static_libraries:
                 final_command += ar + " "
 
+        log("\ng++ building " + file_list + " -> " + out + " with:\n"
+            "Includes: " + str(includes) + "\n"
+            "Link path: " + link_path + "\n"
+            "Link libraries: " + str(shared_objects) + "\n"
+            "Static libraries: " + str(static_libraries), info=True)
+
+        log(final_command, debug=True)
         os.system(final_command)
 
     def build_to_objects(self, location, files, includes=[]) -> list[str]:
@@ -55,22 +64,29 @@ class Gpp(Compiler):
 
             final_command += " -o " + object_file
 
+            log("g++ building the following as an object file: " + base_file + " -> " + object_file, info=True)
+            log(final_command, debug=True)
             os.system(final_command)
             object_files.append(object_file)
+
         return object_files
 
     def build_sharable_objects(self, location, files) -> list[str]:
         object_files = []
         for file in files:
-            # file is the file location
-            # base file is the file name
             base_file = os.path.basename(file)
-
             object_file = location + base_file + ".o"
+            log("g++ building the following as sharable object files: " + base_file + " -> " + object_file, info=True)
             os.system("g++ -c " + file + " -o " + object_file + " -fpic")
             object_files.append(object_file)
         return object_files
 
     def build_shared_object(self, out, files) -> str:
-        os.system("g++ -shared " + concat_list(files) + " -o " + out)
+        final_command = "g++ -shared "
+        file_list = concat_list(files)
+        final_command += file_list
+        final_command += " -o " + out
+        log("g++ building the following as a shared object: " + file_list + " -> " + out, info=True)
+        log(final_command, debug=True)
+        os.system(final_command)
         return out

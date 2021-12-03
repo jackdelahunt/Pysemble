@@ -2,26 +2,16 @@ from shutil import copyfile
 import os.path
 import os
 import shutil
+import logging
+from logger.log import log
 
 build_dir = os.getcwd() + "/__pysembled__/"
-
-def concat_list(str_list) -> str:
-    str = ""
-    for s in str_list:
-        str = str + " " + s
-    return str
-
-def concat_list_prefix(str_list, prefix):
-    str = ""
-    for s in str_list:
-        str = str + " " + prefix + s
-
-    return str
+logging.basicConfig(format='\033[1;37;40m %(levelname)s :: (%(asctime)s) :: %(message)s', datefmt='%H:%M:%S', level=logging.DEBUG)
 
 def create_cache():
     if not os.path.isdir(build_dir):
+        log("No build directory found, creating a new one at: " + bui, info=True)
         os.mkdir(build_dir)
-
 
 class Project:
     def __init__(self, name, compiler):
