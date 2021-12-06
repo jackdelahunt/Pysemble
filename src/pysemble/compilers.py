@@ -39,6 +39,7 @@ class GCC_API(Compiler):
             for so in shared_objects:
                 final_command += "-l" + so + " "
 
+
         if len(static_libraries) > 0:
             for ar in static_libraries:
                 final_command += ar + " "
@@ -94,14 +95,13 @@ class GCC_API(Compiler):
         return out_str
 
 class Gcc(GCC_API):
-    def __init__(self, version: str):
+    def __init__(self, version: str = "c++17"):
         super().__init__("gcc", version)
 
 class Gpp(GCC_API):
-    def __init__(self, version: str):
+    def __init__(self, version: str = "c++17"):
         super().__init__("g++", version)
 
-
 class Clang(GCC_API):
-    def __init__(self, version: str):
+    def __init__(self, version: str = "c++17"):
         super().__init__("clang", version)
