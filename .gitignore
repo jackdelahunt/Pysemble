@@ -3,3 +3,5 @@ venv/
 .idea/
 __pycache__/
 dist/
+build/
+src/pysemble.egg-info
