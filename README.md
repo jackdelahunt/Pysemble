@@ -2,6 +2,29 @@
 
 Custom build system for C/C++ for use with python for configuration.
 
+## Features
+### Supported Compilers
+- G++
+- Gcc
+- Clang
+
+Any compiler or archiver used must be accessible in the PATH with its standard name.
+
+### Supported Archivers
+- Ar
+
+### Supported OS
+- Windows
+- Unix like
+
+### Build Types
+- Build to binary
+  - with static or dynamic linking
+- Static library
+  - with static linking
+- Dynamic Library
+  - with static linking
+
 ## Install
 ```python
 pip install pysemble
@@ -9,7 +32,7 @@ pip install pysemble
 
 ## Modules
 ```python
-from pysemble.builders import Project, Libary
+from pysemble.builders import Project, Library
 from pysemble.compilers import Gpp
 from pysemble.archivers import Ar
 ```
@@ -84,3 +107,7 @@ liblogger
     |_ lib
         |_ liblogger.so
 ```
+
+## Troubleshooting
+### Clang & GCC
+- If you are building c++ try to link with stdc++ if you are having problems
