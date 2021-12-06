@@ -87,6 +87,9 @@ class Library:
         self.objects: list[str] = []
         self.headers: list[str] = []
 
+        if not name.startswith("lib"):
+            log("Library name should be structured lib<name>", warn=True)
+
     def add_source(self, path):
         self.libraries.append(str(Path(path)))
 
