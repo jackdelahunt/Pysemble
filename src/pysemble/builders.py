@@ -95,14 +95,14 @@ class Library:
 
     def add_sources(self, paths):
         for path in paths:
-            self.libraries += str(Path(path))
+            self.libraries.append(str(Path(path)))
 
     def add_header(self, path):
         self.headers.append(str(Path(path)))
 
     def add_headers(self, paths):
         for path in paths:
-            self.headers += str(Path(path))
+            self.headers.append(str(Path(path)))
 
     def build(self):
         self.objects = self.compiler.build_to_objects(build_dir, self.libraries)
