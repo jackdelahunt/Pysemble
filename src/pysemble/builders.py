@@ -32,7 +32,7 @@ class Project:
         self.static_libraries: list[str] = []
         self.dynamic_libraries: list[str] = []
         self.include_directories: list[str] = []
-        self.link_path: str = ""
+        self.link_paths: list[str] = []
 
     # executables
     def add_executable(self, path: str):
@@ -55,8 +55,8 @@ class Project:
     def add_dynamic_libs(self, names: list[str]):
         self.dynamic_libraries += names
 
-    def set_link_path(self, path: str):
-        self.link_path = str(Path(path))
+    def add_link_path(self, path: str):
+        self.link_paths.append(str(Path(path)))
 
     def add_include_directory(self, path: str):
         self.include_directories.append(str(Path(path)))
@@ -64,7 +64,7 @@ class Project:
     def build(self):
         object_files = self.compiler.build_to_objects(build_dir, self.executables, includes=self.include_directories)
         self.compiler.build(Path(self.name), object_files, includes=self.include_directories,
-                            link_path=self.link_path, shared_objects=self.dynamic_libraries,
+                            link_paths=self.link_paths, shared_objects=self.dynamic_libraries,
                             static_libraries=self.static_libraries
                             )
 
@@ -86,6 +86,7 @@ class Library:
         self.libraries: list[str] = []
         self.objects: list[str] = []
         self.headers: list[str] = []
+        self.include_directories: list[str] = []
 
         if not name.startswith("lib"):
             log("Library name should be structured lib<name>", warn=True)
@@ -104,12 +105,15 @@ class Library:
         for path in paths:
             self.headers.append(str(Path(path)))
 
+    def add_include_directory(self, path: str):
+        self.include_directories.append(str(Path(path)))
+
     def build(self):
         self.objects = self.compiler.build_to_objects(build_dir, self.libraries)
         self.archiver.archive(build_dir / self.name, self.objects)
 
     def build_shared(self):
-        self.objects = self.compiler.build_sharable_objects(build_dir, self.libraries)
+        self.objects = self.compiler.build_sharable_objects(build_dir, self.libraries, self.include_directories)
         self.compiler.build_shared_object(build_dir / (self.name + ".so"), self.objects)
 
     def package(self, dynamic=False):
@@ -129,7 +133,7 @@ class Library:
             copyfile(header, include_path / file_name)
 
         # build shared objects
-        self.objects = self.compiler.build_sharable_objects(build_dir, self.libraries)
+        self.objects = self.compiler.build_sharable_objects(build_dir, self.libraries, self.include_directories)
 
         if len(self.headers) == 0:
             log("Packaging library with not header files, is this intentional?", warn=True)

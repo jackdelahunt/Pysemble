@@ -64,23 +64,24 @@ mylibrary.build_shared() # dynamic library
 ```
 
 ## Add External Libraries to Project
+
 ```python
-compiler = Gpp() # g++
+compiler = Gpp()  # g++
 
 working_directory = os.path.dirname(os.path.realpath(__file__))
 os.environ["LD_LIBRARY_PATH"] = working_directory + "/SFML/lib"
 
 project = Project("myproject", compiler)
 project.add_executables([
-    "main.cpp",
+  "main.cpp",
 ])
-project.set_link_path("SFML/lib")
+project.add_link_path("SFML/lib")
 project.add_include_directory("SFML/include")
 project.add_dynamic_libs([
-    "sfml-graphics",
-    "sfml-window",
-    "sfml-system",
-    "sfml-audio",
+  "sfml-graphics",
+  "sfml-window",
+  "sfml-system",
+  "sfml-audio",
 ])
 project.build()
 project.run()

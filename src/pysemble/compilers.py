@@ -12,7 +12,7 @@ class Compiler:
     def build_to_objects(self, location: Path, files: list[str], includes: list[str] = []) -> list[str]:
         pass
 
-    def build_sharable_objects(self, location: Path, files: list[str]) -> list[str]:
+    def build_sharable_objects(self, location: Path, files: list[str], includes: list[str] = []) -> list[str]:
         pass
 
     def build_shared_object(self, out: Path, files: list[str]) -> str:
@@ -25,7 +25,7 @@ class GCC_API(Compiler):
         self.compiler_name = compiler_name
         self.flags: list[str] = ["-std=" + version, "-O" + str(optimization)]
 
-    def build(self, out: Path, files: list[str], includes: list[str] = [], link_path: str = "", shared_objects: list[str] = [], static_libraries: list[str]=[]):
+    def build(self, out: Path, files: list[str], includes: list[str] = [], link_paths: list[str] = [], shared_objects: list[str] = [], static_libraries: list[str]=[]):
         file_list = concat_list(files)
         flag_list = concat_list(self.flags)
         final_command = self.compiler_name + \
@@ -37,8 +37,9 @@ class GCC_API(Compiler):
             for i in includes:
                 final_command += "-I" + i + " "
 
-        if link_path != "":
-            final_command += "-L" + link_path + " "
+        if len(link_paths) > 0:
+            for i in link_paths:
+                final_command += "-L" + i + " "
 
         if len(shared_objects) > 0:
             for so in shared_objects:
@@ -48,11 +49,7 @@ class GCC_API(Compiler):
             for ar in static_libraries:
                 final_command += ar + " "
 
-        log(self.compiler_name + " building " + file_list + " -> " + str(out) + " with:\n"
-            "Includes: " + str(includes) + "\n"
-            "Link path: " + link_path + "\n"
-            "Link libraries: " + str(shared_objects) + "\n"
-            "Static libraries: " + str(static_libraries), info=True)
+        log(self.compiler_name + " building " + file_list + " -> " + str(out))
 
         log(final_command, debug=True)
         os.system(final_command)
@@ -77,13 +74,19 @@ class GCC_API(Compiler):
 
         return object_files
 
-    def build_sharable_objects(self, location: Path, files: list[str]) -> list[str]:
+    def build_sharable_objects(self, location: Path, files: list[str], includes: list[str] = []) -> list[str]:
         object_files: list[str] = []
         for file in files:
             base_file: str = os.path.basename(file)
             object_file = str(location / (base_file + ".o"))
+            final_command = self.compiler_name + concat_list(self.flags) + " -fpic -c -o " + object_file + " " + file
+            if len(includes) > 0:
+                for i in includes:
+                    final_command += " -I" + i + " "
+
+            os.system(final_command)
             log(self.compiler_name + " building the following as sharable object files: " + base_file + " -> " + object_file, info=True)
-            os.system(self.compiler_name + concat_list(self.flags) + " -c " + file + " -o " + object_file + " -fpic")
+            log(final_command, debug=True)
             object_files.append(object_file)
         return object_files
 

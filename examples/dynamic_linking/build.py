@@ -20,6 +20,6 @@ project.add_executables([
 ])
 project.add_dynamic_lib("logger")
 project.add_include_directory("liblogger/include")
-project.set_link_path("liblogger/lib")
+project.add_link_path("liblogger/lib")
 project.build()
 project.run()
